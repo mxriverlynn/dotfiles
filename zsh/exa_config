@@ -1,0 +1,15 @@
+#! /bin/zsh
+
+# set `dir` exa configuration and colors
+function set_exa_config {
+  local USER_PERMS="ur=37;40:uw=37;40:ux=37;40:ue=37;40"
+  local GROUP_PERMS="gr=37;40:gw=37;40:gx=37;40:ge=37;40"
+  local OTHER_PERMS="tr=37;40:tw=37;40:tx=37;40"
+  local USER_GROUP="uu=37;40:un=31;40"
+
+  export EXA_COLORS="ex=31;40:sn=32;40:da=36;40:di=33;40:gm=31;40:$USER_GROUP:$USER_PERMS:$GROUP_PERMS:$OTHER_PERMS"
+
+  alias dir="exa -lahF --git"
+}
+
+set_exa_config

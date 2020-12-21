@@ -1,0 +1,12 @@
+#! /bin/zsh
+
+# ruby / rails / bundler config
+eval "$(rbenv init -)"
+export RUBY_CONFIGURE_OPTS="--with-openssl-dir=$(brew --prefix openssl@1.1)"
+
+# node env config
+eval "$(nodenv init -)"
+
+# load yvm
+export YVM_DIR=/usr/local/opt/yvm
+[ -r $YVM_DIR/yvm.sh ] && . $YVM_DIR/yvm.sh

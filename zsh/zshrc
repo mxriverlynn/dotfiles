@@ -1,0 +1,20 @@
+#! /bin/zsh
+
+source ./code_config
+source ./exa_config
+source ./prompt_config
+
+export TERM=xterm-color
+export CLICOLOR=1
+export LSCOLORS=Dxfxcxdxbxegedabagacad
+
+export EDITOR=mvim
+export CC=/usr/bin/gcc
+
+export PATH="/usr/local/opt/icu4c/bin:$PATH"
+export PATH="/usr/local/opt/icu4c/sbin:$PATH"
+export LDFLAGS="-L/usr/local/opt/icu4c/lib"
+export CPPFLAGS="-I/usr/local/opt/icu4c/include"
+export PKG_CONFIG_PATH="/usr/local/opt/icu4c/lib/pkgconfig"
+
+export PORT=3000
