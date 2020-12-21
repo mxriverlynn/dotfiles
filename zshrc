@@ -1,3 +1,5 @@
+#! /bin/zsh
+
 # ruby / rails / bundler config
 eval "$(rbenv init -)"
 
