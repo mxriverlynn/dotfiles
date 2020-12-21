@@ -1,8 +1,14 @@
 #! /bin/zsh
 
-source ./code_config
-source ./exa_config
-source ./prompt_config
+ZSH_FOLDER=`dirname "$0"`
+ROOT_FOLDER=$ZSH_FOLDER/..
+
+. $ZSH_FOLDER/code_config
+. $ZSH_FOLDER/exa_config
+. $ZSH_FOLDER/prompt_config
+
+. $ROOT_FOLDER/private/gitup/gitup.sh
+. $ROOT_FOLDER/private/rbear/rbear.sh
 
 export TERM=xterm-color
 export CLICOLOR=1
