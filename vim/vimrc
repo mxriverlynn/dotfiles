@@ -3,7 +3,6 @@ execute pathogen#infect()
 colorscheme desert
 
 set guifont=HackNerdFontCompleteM-Regular:h18
-set runtimepath^=~/.vim/bundle/ag
 set noerrorbells visualbell
 
 " tabs to spaces
@@ -11,24 +10,13 @@ set tabstop=2
 set shiftwidth=2
 set expandtab
 
-" file types and syntax highlighting
-syntax on
-filetype plugin indent on
-au BufNewFile,BufRead *.js         set syntax=javascript
-au BufNewFile,BufRead *.json       set syntax=javascript
-au BufNewFile,BufRead *.rb         set syntax=ruby
-au BufNewFile,BufRead *.sh         set syntax=bash
-au BufNewFile,BufRead *.zsh        set syntax=bash
-au BufNewFile,BufRead *.dockerfile set syntax=dockerfile
-
-let mapleader = ","
-nnoremap <LEADER>d :NERDTreeToggle<CR>
-nnoremap <LEADER>f :NERDTreeFind<CR>
-nnoremap <LEADER>t :Files<CR>
+source ~/.dotfiles/vim/file_types.vim
+source ~/.dotfiles/vim/mapping.vim
 
 " Start NERDTree and put the cursor back in the other window.
 autocmd GUIEnter * NERDTree | wincmd p
 
+set runtimepath^=~/.vim/bundle/ag
 if executable('ag')
   let g:ackprg = 'ag --vimgrep'
 endif
