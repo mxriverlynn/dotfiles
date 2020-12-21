@@ -6,7 +6,7 @@ ROOT_FOLDER=$ZSH_FOLDER/..
 source $ZSH_FOLDER/code_config
 source $ZSH_FOLDER/exa_config
 source $ZSH_FOLDER/prompt_config
-source
+
 source $ROOT_FOLDER/private/gitup/gitup.sh
 source $ROOT_FOLDER/private/rbear/rbear.sh
 
