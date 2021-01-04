@@ -3,6 +3,7 @@ execute pathogen#infect()
 colorscheme desert
 
 set guifont=HackNerdFontCompleteM-Regular:h18
+set number
 set noerrorbells visualbell
 
 " tabs to spaces

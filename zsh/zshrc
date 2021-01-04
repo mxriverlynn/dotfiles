@@ -7,7 +7,6 @@ source $ZSH_FOLDER/code_config
 source $ZSH_FOLDER/exa_config
 source $ZSH_FOLDER/prompt_config
 
-source $ROOT_FOLDER/private/gitup/gitup.sh
 source $ROOT_FOLDER/private/rbear/rbear.sh
 
 export TERM=xterm-color
@@ -19,8 +18,13 @@ export CC=/usr/bin/gcc
 
 export PATH="/usr/local/opt/icu4c/bin:$PATH"
 export PATH="/usr/local/opt/icu4c/sbin:$PATH"
+export PATH="/usr/local/opt/postgresql@10/bin:$PATH"
+
+# export LDFLAGS="-L/usr/local/opt/postgresql@10/lib"
+# export CPPFLAGS="-I/usr/local/opt/postgresql@10/include"
+# export PKG_CONFIG_PATH="/usr/local/opt/postgresql@10/lib/pkgconfig"
+  
 export LDFLAGS="-L/usr/local/opt/icu4c/lib"
 export CPPFLAGS="-I/usr/local/opt/icu4c/include"
 export PKG_CONFIG_PATH="/usr/local/opt/icu4c/lib/pkgconfig"
 
-export PORT=3000
