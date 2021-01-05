@@ -17,4 +17,4 @@ source ~/.dotfiles/vim/swap_files.vim
 source ~/.dotfiles/vim/ack_search.vim
 
 " Start NERDTree and put the cursor back in the other window.
-autocmd GUIEnter * NERDTree | wincmd p
+autocmd GUIEnter * NERDTree
