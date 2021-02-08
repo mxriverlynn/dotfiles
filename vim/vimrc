@@ -11,10 +11,10 @@ set tabstop=2
 set shiftwidth=2
 set expandtab
 
-source ~/.dotfiles/vim/file_types.vim
-source ~/.dotfiles/vim/mapping.vim
-source ~/.dotfiles/vim/swap_files.vim
-source ~/.dotfiles/vim/ack_search.vim
+source ~/dotfiles/vim/file_types.vim
+source ~/dotfiles/vim/mapping.vim
+source ~/dotfiles/vim/swap_files.vim
+source ~/dotfiles/vim/ack_search.vim
 
 " Start NERDTree and put the cursor back in the other window.
 autocmd GUIEnter * NERDTree
