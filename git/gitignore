@@ -1,0 +1,7 @@
+.gituprc
+
+*.swp
+*.swo
+*.swn
+
+*.orig
