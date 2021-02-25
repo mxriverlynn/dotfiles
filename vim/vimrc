@@ -2,7 +2,10 @@ execute pathogen#infect()
 
 colorscheme desert
 
+" Hack NerdFont Complete Mono
+" https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/Hack
 set guifont=HackNerdFontCompleteM-Regular:h18
+
 set number
 set noerrorbells visualbell
 
@@ -11,10 +14,12 @@ set tabstop=2
 set shiftwidth=2
 set expandtab
 
-source ~/dotfiles/vim/file_types.vim
-source ~/dotfiles/vim/mapping.vim
-source ~/dotfiles/vim/swap_files.vim
-source ~/dotfiles/vim/ack_search.vim
+source ~/.vim/file_types.vim
+source ~/.vim/mapping.vim
+source ~/.vim/swap_files.vim
+source ~/.vim/ack_search.vim
 
-" Start NERDTree and put the cursor back in the other window.
-autocmd GUIEnter * NERDTree
+" Start NERDTree
+autocmd VimEnter * NERDTree
+" and put the cursor back in the other window.
+" autocmd VimEnter * NERDTree | wincmd p
