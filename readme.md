@@ -11,15 +11,19 @@ my dotfiles
 
 ## Vim Plugins
 
-* pathogen.vim
+these are added as disconnected source directly to this repo
 
-* ack.vim
-* bufexplorer
-* fzf
-* fzf.vim
-* nerdtree
-* vim-javascript
-* vim-markdown
-* vim-projectionist
-* vim-rails
-* vim-sensible
+autoload/
+* [pathogen.vim](https://github.com/tpope/vim-pathogen)
+
+bundle/
+* [ack.vim](https://github.com/mileszs/ack.vim)
+* [bufexplorer](https://github.com/jlanzarotta/bufexplorer)
+* [fzf](https://github.com/junegunn/fzf)
+* [fzf.vim](https://github.com/junegunn/fzf.vim)
+* [nerdtree](https://github.com/preservim/nerdtree)
+* [vim-javascript](https://github.com/pangloss/vim-javascript)
+* [vim-markdown](https://github.com/tpope/vim-markdown)
+* [vim-projectionist](https://github.com/tpope/vim-projectionist)
+* [vim-rails](https://github.com/tpope/vim-rails)
+* [vim-sensible](https://github.com/tpope/vim-sensible)
