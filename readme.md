@@ -8,6 +8,10 @@ my dotfiles
 0. `cat source ~/dotfiles/vim/vimrc >> ~/.zshrc`
 0. `ln -s ~/dotfiles/vim/vimrc ~/.vimrc`
 0. `ln -s ~/dotfiles/vim ~/.vim`
+0. `mkdir ~/dotfiles/private`
+0. `git clone git@github.com:mxriverlynn/rbear.git ~/dotfiles/private/rbear`
+0. `git clone git@github.com:mxriverlynn/gitup.git ~/dotfiles/private/gitup`
+0. `cd ~; ~/dotfiles/private/gitup/gitup.sh --make-executable`
 
 ## Vim Plugins
 
