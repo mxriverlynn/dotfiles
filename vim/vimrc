@@ -6,6 +6,7 @@ colorscheme desert
 " https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/Hack
 set guifont=HackNerdFontCompleteM-Regular:h18
 
+set nowrap
 set number
 set noerrorbells visualbell
 
