@@ -20,6 +20,10 @@ source ~/.vim/mapping.vim
 source ~/.vim/swap_files.vim
 source ~/.vim/ack_search.vim
 
+syntax region hereDocDashSQL matchgroup=Statement start=+<<\s*[-'\\]\?\z(SQLDOC\)+ end=+^\s*\z1+ contains=@SQL
+      \ containedin=@shCaseList,shCommandSubList,shFunctionList
+" Introduce ^^^^ the new heredoc to $VIMRUNTIME/syntax/sh.vim
+
 " Start NERDTree
 autocmd VimEnter * NERDTree
 " and put the cursor back in the other window.

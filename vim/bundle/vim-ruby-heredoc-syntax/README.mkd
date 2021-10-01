@@ -1,0 +1,33 @@
+# vim-ruby-heredoc-syntax
+
+This enables syntax highlighting in Ruby here document code blocks.
+
+## Install
+
+Use neobundle.vim:
+
+```vim
+NeoBundle 'joker1007/vim-ruby-heredoc-syntax'
+```
+
+## For neosnippet & context\_filetype
+If you have the context\_filetype.vim plugin,
+this adds context filetype setting for Ruby here document block.
+
+## Screenshot
+
+![screenshot.png](screenshot.png)
+
+## Options
+
+```vim
+" Add syntax rule
+let g:ruby_heredoc_syntax_filetypes = {
+        \ "xml" : {
+        \   "start" : "XML",
+        \},
+  \}
+
+" 'start' is heredoc start literal.
+```
+
