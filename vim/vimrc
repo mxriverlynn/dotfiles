@@ -15,6 +15,9 @@ set tabstop=2
 set shiftwidth=2
 set expandtab
 
+" fzf plugin
+set rtp+=/usr/local/opt/fzf
+
 source ~/.vim/file_types.vim
 source ~/.vim/mapping.vim
 source ~/.vim/swap_files.vim
