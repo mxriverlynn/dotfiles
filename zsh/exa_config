@@ -9,7 +9,7 @@ function set_exa_config {
 
   export EXA_COLORS="ex=31;40:sn=32;40:da=36;40:di=33;40:gm=31;40:$USER_GROUP:$USER_PERMS:$GROUP_PERMS:$OTHER_PERMS"
 
-  alias dir="exa -lahF --git"
+  alias dir="eza -lahF --git"
 }
 
 set_exa_config

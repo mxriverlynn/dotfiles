@@ -7,8 +7,6 @@ source $ZSH_FOLDER/code_config
 source $ZSH_FOLDER/exa_config
 source $ZSH_FOLDER/prompt_config
 
-source $ROOT_FOLDER/private/rbear/rbear.sh
-
 export TERM=xterm-color
 export CLICOLOR=1
 export LSCOLORS=Dxfxcxdxbxegedabagacad
@@ -16,10 +14,31 @@ export LSCOLORS=Dxfxcxdxbxegedabagacad
 export EDITOR=mvim
 export CC=/usr/bin/gcc
 
-export PATH="/usr/local/opt/icu4c/bin:$PATH"
-export PATH="/usr/local/opt/icu4c/sbin:$PATH"
-export PATH="/usr/local/opt/postgresql@9.5/bin:$PATH"
-export PATH="/usr/local/opt/mysql@5.7/bin:$PATH"
+export PATH="/opt/homebrew/opt/libpq/bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
+export PATH="$PATH:~/go/bin"
+export LDFLAGS="-L/opt/homebrew/opt/libpq/lib"
+export CPPFLAGS="-I/opt/homebrew/opt/libpq/include"
+export PKG_CONFIG_PATH="/opt/homebrew/opt/libpq/lib/pkgconfig"
+
+export DISABLE_CORS_CHECKS=1
+export AWS_ENDPOINT_URL=http://localhost:4566
+export LOCALSTACK_AUTH_TOKEN="ls-fAXedaTa-gIQi-5857-sIYe-gUNu8953509d"
+export DEBUG=1
+
+function claude() {
+  local profiles=("GearJot" "Test Double")
+  local configs=("$HOME/.claude-gearjot" "$HOME/.claude-testdouble")
+  local PS3="Profile: "
+  select name in "${profiles[@]}"; do
+    [[ $REPLY -ge 1 && $REPLY -le ${#profiles[@]} ]] || { echo "Invalid selection"; continue; }
+    CLAUDE_CONFIG_DIR="${configs[$REPLY]}" command claude "$@"
+    break
+  done
+}
+
+# postgres and pg gem: fix segfault
+# export PGGSSENCMODE="disable"
 
 # export LDFLAGS="-L/usr/local/opt/icu4c/lib"
 # export CPPFLAGS="-I/usr/local/opt/icu4c/include"
@@ -28,4 +47,6 @@ export PATH="/usr/local/opt/mysql@5.7/bin:$PATH"
 # export LDFLAGS="-L/usr/local/opt/postgresql@9.5/lib"
 # export CPPFLAGS="-I/usr/local/opt/postgresql@9.5/include"
 # export PKG_CONFIG_PATH="/usr/local/opt/postgresql@9.5/lib/pkgconfig"
-export PATH="/usr/local/opt/imagemagick@6/bin:$PATH"
+# export PATH="/usr/local/opt/imagemagick@6/bin:$PATH"
+
+# alias openapi-generator-cli="openapi-generator"

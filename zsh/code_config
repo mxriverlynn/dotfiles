@@ -1,7 +1,7 @@
 #! /bin/zsh
 
 # ruby / rails / bundler config
-export RUBY_CONFIGURE_OPTS="--with-openssl-dir=$(brew --prefix openssl@1.1)"
+export RUBY_CONFIGURE_OPTS="--with-openssl-dir=$(brew --prefix openssl@3)"
 eval "$(rbenv init -)"
 
 # node env config
@@ -16,3 +16,5 @@ export REACT_APP_PORT=3001
 export REACT_APP_API_ROOT=http://localhost:3000
 export RAILS_ENV=development
 export NODE_ENV=development
+export LOCALSTACK_AUTH_TOKEN="ls-zoTo3875-TahU-KIpA-SUcu-modOXIZie9dc"
+export GOPATH=$HOME/go
