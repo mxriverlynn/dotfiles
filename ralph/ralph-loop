@@ -1,0 +1,55 @@
+#!/bin/bash
+set -e
+
+ITERATIONS=${1:-0}
+RALPH_DIR="$(cd "$(dirname "$0")" && pwd)"
+FEATURE_PROMPT_FILE="$RALPH_DIR/prompts/feature-work.md"
+TESTING_PROMPT_FILE="$RALPH_DIR/prompts/test-writing.md"
+CODE_REVIEW_PROMPT_FILE="$RALPH_DIR/prompts/code-review-changes.md"
+LESSONS_LEARNED_PROMPT_FILE="$RALPH_DIR/prompts/lessons-learned.md"
+
+if (( ITERATIONS <= 0 )); then
+  echo "Usage: $0 <iterations> [prompt-file]"
+  exit 1
+fi
+
+ITERATIONS_COUNT=0
+ITERATIONS_COMPLETE=0
+for ((i=1; i<=ITERATIONS; i++)); do
+  ITERATIONS_COUNT=$i
+
+  echo ""
+  echo "## [Iteration:$i/$ITERATIONS]: Ralph is working the next task"
+  PROMPT=$(cat $FEATURE_PROMPT_FILE)
+  RESULT=$(claude --permission-mode acceptEdits --model opus -p "$PROMPT")
+  echo "$RESULT"
+  
+  if [[ "$RESULT" == *"<promise>COMPLETE</promise>"* ]]; then
+    ITERATIONS_COMPLETE=1
+  fi
+
+  echo ""
+  echo "## [Iteration:$i/$ITERATIONS]: Ralph is writing tests"
+  PROMPT=$(cat $TESTING_PROMPT_FILE)
+  RESULT=$(claude --permission-mode acceptEdits --model opus -p "$PROMPT")
+  echo "$RESULT"
+
+  echo ""
+  echo "## [Iteration:$i/$ITERATIONS]: Ralph is running a code review and fixing issues"
+  PROMPT=$(cat $CODE_REVIEW_PROMPT_FILE)
+  RESULT=$(claude --permission-mode acceptEdits --model opus -p "$PROMPT")
+  echo "$RESULT"
+
+  if [[ "$ITERATIONS_COMPLETE" == "1" ]]; then
+    break;
+  fi
+done
+
+echo ""
+echo "## [Finalizing]: Ralph is looking for lessons learned and documenting them"
+PROMPT=$(cat $LESSONS_LEARNED_PROMPT_FILE)
+RESULT=$(claude --permission-mode acceptEdits --model opus -p "$PROMPT")
+echo "$RESULT"
+
+echo ""
+echo "Ralph completed after $ITERATIONS_COUNT iterations."
