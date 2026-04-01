@@ -11,7 +11,6 @@ This is all based on [AI Hero's Getting Started with Ralph](https://www.aihero.d
    1. Work it, then update progress.txt and deferred.txt
    1. Write tests for it, then update progress.txt and deferred.txt
    1. Code Review it, then update progress.txt and deferred.txt
-   1. Repeat
 1. Repeat loop until iterations complete or no work left
 1. Read progress.txt and codify lessons learned
 1. Read deferred.txt and create or update issue tickets w/ `deferred` label
