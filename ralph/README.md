@@ -1,4 +1,6 @@
-# River's PowerRalph9000
+# River's Power-Ralph.9000
+
+<img src="./images/power-ralph-9000.jpg">
 
 This is all based on [AI Hero's Getting Started with Ralph](https://www.aihero.dev/getting-started-with-ralph).
 
