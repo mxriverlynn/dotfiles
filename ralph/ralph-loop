@@ -6,6 +6,7 @@ RALPH_DIR="$(cd "$(dirname "$0")" && pwd)"
 FEATURE_PROMPT_FILE="$RALPH_DIR/prompts/feature-work.md"
 TESTING_PROMPT_FILE="$RALPH_DIR/prompts/test-writing.md"
 CODE_REVIEW_PROMPT_FILE="$RALPH_DIR/prompts/code-review-changes.md"
+DEFERRED_WORK_PROMPT_FILE="$RALPH_DIR/prompts/deferred-work.md"
 LESSONS_LEARNED_PROMPT_FILE="$RALPH_DIR/prompts/lessons-learned.md"
 
 if (( ITERATIONS <= 0 )); then
@@ -19,7 +20,7 @@ for ((i=1; i<=ITERATIONS; i++)); do
   ITERATIONS_COUNT=$i
 
   echo ""
-  echo "## [Iteration:$i/$ITERATIONS]: Ralph is working the next task"
+  echo "## [Iteration:$i/$ITERATIONS, $(date)]: Ralph is working the next task"
   PROMPT=$(cat $FEATURE_PROMPT_FILE)
   RESULT=$(claude --permission-mode acceptEdits --model opus -p "$PROMPT")
   echo "$RESULT"
@@ -29,13 +30,13 @@ for ((i=1; i<=ITERATIONS; i++)); do
   fi
 
   echo ""
-  echo "## [Iteration:$i/$ITERATIONS]: Ralph is writing tests"
+  echo "## [Iteration:$i/$ITERATIONS, $(date)]: Ralph is writing tests"
   PROMPT=$(cat $TESTING_PROMPT_FILE)
   RESULT=$(claude --permission-mode acceptEdits --model opus -p "$PROMPT")
   echo "$RESULT"
 
   echo ""
-  echo "## [Iteration:$i/$ITERATIONS]: Ralph is running a code review and fixing issues"
+  echo "## [Iteration:$i/$ITERATIONS, $(date)]: Ralph is running a code review and fixing issues"
   PROMPT=$(cat $CODE_REVIEW_PROMPT_FILE)
   RESULT=$(claude --permission-mode acceptEdits --model opus -p "$PROMPT")
   echo "$RESULT"
@@ -46,10 +47,18 @@ for ((i=1; i<=ITERATIONS; i++)); do
 done
 
 echo ""
-echo "## [Finalizing]: Ralph is looking for lessons learned and documenting them"
+echo "## [Finalizing:1/2, $(date)]: Ralph is looking for deffered work and creating issue tickets for them"
+PROMPT=$(cat $DEFERRED_WORK_PROMPT_FILE)
+RESULT=$(claude --permission-mode acceptEdits --model opus -p "$PROMPT")
+echo "$RESULT"
+
+echo ""
+echo "## [Finalizing:2/2, $(date)]: Ralph is looking for lessons learned and documenting them"
 PROMPT=$(cat $LESSONS_LEARNED_PROMPT_FILE)
 RESULT=$(claude --permission-mode acceptEdits --model opus -p "$PROMPT")
 echo "$RESULT"
 
 echo ""
-echo "Ralph completed after $ITERATIONS_COUNT iterations."
+echo "[Completed, $(date)]: Ralph completed after $ITERATIONS_COUNT iterations."
+
+exit 0
