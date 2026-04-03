@@ -2,48 +2,73 @@
 set -e
 
 ITERATIONS=${1:-0}
+ITERATIONS_RUN=0
+
 RALPH_DIR="$(cd "$(dirname "$0")" && pwd)"
+
 FEATURE_PROMPT_FILE="$RALPH_DIR/prompts/feature-work.md"
 TESTING_PROMPT_FILE="$RALPH_DIR/prompts/test-writing.md"
 CODE_REVIEW_PROMPT_FILE="$RALPH_DIR/prompts/code-review-changes.md"
 DEFERRED_WORK_PROMPT_FILE="$RALPH_DIR/prompts/deferred-work.md"
 LESSONS_LEARNED_PROMPT_FILE="$RALPH_DIR/prompts/lessons-learned.md"
+CLOSE_ISSUE_PROMPT_FILE="$RALPH_DIR/prompts/close-issue.md"
 
 if (( ITERATIONS <= 0 )); then
   echo "Usage: $0 <iterations> [prompt-file]"
   exit 1
 fi
 
-ITERATIONS_COUNT=0
-ITERATIONS_COMPLETE=0
+echo ""
+echo "## [Init:1/2, $(date)]: Ralph is finding your github username"
+USERNAME=$($RALPH_DIR/scripts/get_gh_user)
+
 for ((i=1; i<=ITERATIONS; i++)); do
-  ITERATIONS_COUNT=$i
+  echo ""
+  echo "## [Iteration:$i/$ITERATIONS, $(date)]: Ralph is looking for the next issue to work"
+  ISSUE_ID=$($RALPH_DIR/scripts/get_next_issue $USERNAME)
+
+  if [[ ! -n "$ISSUE_ID" ]]; then
+    echo "## [Iteration:$i/$ITERATIONS, $(date)]: Ralph found nothing to work. Exiting loop."
+    exit 0
+  fi
 
   echo ""
-  echo "## [Iteration:$i/$ITERATIONS, $(date)]: Ralph is working the next task"
-  PROMPT=$(cat $FEATURE_PROMPT_FILE)
+  echo "## [Iteration:$i/$ITERATIONS, $(date)]: Ralph is finding the current git commit sha"
+  STARTING_SHA=$($RALPH_DIR/scripts/get_commit_sha)
+
+  echo ""
+  echo "## [Iteration:$i/$ITERATIONS, $(date)]: Ralph is working issue #$ISSUE_ID"
+  PROMPT="ISSUENUMBER=$ISSUE_ID\n"
+  PROMPT+="STARTINGSHA=$STARTING_SHA\n"
+  PROMPT+=$(cat $FEATURE_PROMPT_FILE)
   RESULT=$(claude --permission-mode acceptEdits --model opus -p "$PROMPT")
   echo "$RESULT"
   
-  if [[ "$RESULT" == *"<promise>COMPLETE</promise>"* ]]; then
-    ITERATIONS_COMPLETE=1
-  fi
-
   echo ""
-  echo "## [Iteration:$i/$ITERATIONS, $(date)]: Ralph is writing tests"
-  PROMPT=$(cat $TESTING_PROMPT_FILE)
+  echo "## [Iteration:$i/$ITERATIONS, $(date)]: Ralph is writing tests for issue #$ISSUE_ID"
+  PROMPT="ISSUENUMBER=$ISSUE_ID\n"
+  PROMPT+="STARTINGSHA=$STARTING_SHA\n"
+  PROMPT+=$(cat $TESTING_PROMPT_FILE)
   RESULT=$(claude --permission-mode acceptEdits --model opus -p "$PROMPT")
   echo "$RESULT"
 
   echo ""
-  echo "## [Iteration:$i/$ITERATIONS, $(date)]: Ralph is running a code review and fixing issues"
-  PROMPT=$(cat $CODE_REVIEW_PROMPT_FILE)
+  echo "## [Iteration:$i/$ITERATIONS, $(date)]: Ralph is running a code review and fixing issues for issue #$ISSUE_ID"
+  PROMPT="ISSUENUMBER=$ISSUE_ID\n"
+  PROMPT+="STARTINGSHA=$STARTING_SHA\n"
+  PROMPT+=$(cat $CODE_REVIEW_PROMPT_FILE)
   RESULT=$(claude --permission-mode acceptEdits --model opus -p "$PROMPT")
   echo "$RESULT"
 
-  if [[ "$ITERATIONS_COMPLETE" == "1" ]]; then
-    break;
-  fi
+  echo ""
+  echo "## [Iteration:$i/$ITERATIONS, $(date)]: Ralph is closing issue #$ISSUE_ID"
+  PROMPT="ISSUENUMBER=$ISSUE_ID\n"
+  PROMPT+="STARTINGSHA=$STARTING_SHA\n"
+  PROMPT+=$(cat $CLOSE_ISSUE_PROMPT_FILE)
+  RESULT=$(claude --permission-mode acceptEdits --model opus -p "$PROMPT")
+  echo "$RESULT"
+
+  ITERATIONS_RUN=$i
 done
 
 echo ""
@@ -59,6 +84,6 @@ RESULT=$(claude --permission-mode acceptEdits --model opus -p "$PROMPT")
 echo "$RESULT"
 
 echo ""
-echo "[Completed, $(date)]: Ralph completed after $ITERATIONS_COUNT iterations."
+echo "[Completed, $(date)]: Ralph completed after $ITERATIONS_RUN iterations."
 
 exit 0
