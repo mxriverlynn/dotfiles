@@ -19,10 +19,18 @@ if (( ITERATIONS <= 0 )); then
 fi
 
 echo ""
-echo "## [Init:1/2, $(date)]: Ralph is finding your github username"
+echo "# [$(date)]: Initializing Ralph."
+cat $RALPH_DIR/ralph-art.txt
+
+echo ""
+echo "## [Init:1/1, $(date)]: Ralph is finding your github username"
 USERNAME=$($RALPH_DIR/scripts/get_gh_user)
 
 for ((i=1; i<=ITERATIONS; i++)); do
+  echo "---"
+  echo ""
+  echo "# [Iteration:$i/$ITERATIONS, $(date)]: Starting a new iteration"
+
   echo ""
   echo "## [Iteration:$i/$ITERATIONS, $(date)]: Ralph is looking for the next issue to work"
   ISSUE_ID=$($RALPH_DIR/scripts/get_next_issue $USERNAME)
@@ -35,6 +43,7 @@ for ((i=1; i<=ITERATIONS; i++)); do
   echo ""
   echo "## [Iteration:$i/$ITERATIONS, $(date)]: Ralph is finding the current git commit sha"
   STARTING_SHA=$($RALPH_DIR/scripts/get_commit_sha)
+  echo " - Starting git SHA for this iteration: $STARTING_SHA"
 
   echo ""
   echo "## [Iteration:$i/$ITERATIONS, $(date)]: Ralph is working issue #$ISSUE_ID"
