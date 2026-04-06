@@ -34,6 +34,7 @@ for ((i=1; i<=ITERATIONS; i++)); do
   echo ""
   echo "## [Iteration:$i/$ITERATIONS, $(date)]: Ralph is looking for the next issue to work"
   ISSUE_ID=$($RALPH_DIR/scripts/get_next_issue $USERNAME)
+  echo " - Issue #$ISSUE_ID"
 
   if [[ ! -n "$ISSUE_ID" ]]; then
     echo "## [Iteration:$i/$ITERATIONS, $(date)]: Ralph found nothing to work. Exiting loop."
@@ -71,10 +72,7 @@ for ((i=1; i<=ITERATIONS; i++)); do
 
   echo ""
   echo "## [Iteration:$i/$ITERATIONS, $(date)]: Ralph is closing issue #$ISSUE_ID"
-  PROMPT="ISSUENUMBER=$ISSUE_ID\n"
-  PROMPT+="STARTINGSHA=$STARTING_SHA\n"
-  PROMPT+=$(cat $CLOSE_ISSUE_PROMPT_FILE)
-  RESULT=$(claude --permission-mode acceptEdits --model opus -p "$PROMPT")
+  RESULT=$($RALPH_DIR/scripts/close_gh_issue $ISSUE_ID)
   echo "$RESULT"
 
   ITERATIONS_RUN=$i
