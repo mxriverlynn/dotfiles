@@ -27,7 +27,8 @@ cat $RALPH_DIR/ralph-art.txt
 
 echo ""
 echo "## [Init:1/1, $(date)]: Ralph is finding your github username"
-USERNAME=$($RALPH_DIR/scripts/get_gh_user)
+USERNAME=$($RALPH_DIR/scripts/get_gh_user 2>&1)
+$RALPH_DIR/scripts/box-text "User: $USERNAME"
 
 for ((i=1; i<=ITERATIONS; i++)); do
   echo "---"
@@ -36,7 +37,7 @@ for ((i=1; i<=ITERATIONS; i++)); do
 
   echo ""
   echo "## [Iteration:$i/$ITERATIONS, $(date)]: Ralph is looking for the next issue to work"
-  ISSUE_ID=$($RALPH_DIR/scripts/get_next_issue $USERNAME)
+  ISSUE_ID=$($RALPH_DIR/scripts/get_next_issue $USERNAME 2>&1)
   $RALPH_DIR/scripts/box-text "Issue #$ISSUE_ID"
 
   if [[ ! -n "$ISSUE_ID" ]]; then
@@ -46,7 +47,7 @@ for ((i=1; i<=ITERATIONS; i++)); do
 
   echo ""
   echo "## [Iteration:$i/$ITERATIONS, $(date)]: Ralph is finding the current git commit sha"
-  STARTING_SHA=$($RALPH_DIR/scripts/get_commit_sha)
+  STARTING_SHA=$($RALPH_DIR/scripts/get_commit_sha 2>&1)
   $RALPH_DIR/scripts/box-text " - Starting git SHA for this iteration: $STARTING_SHA"
 
   echo ""
@@ -91,7 +92,8 @@ for ((i=1; i<=ITERATIONS; i++)); do
 
   echo ""
   echo "## [Iteration:$i/$ITERATIONS, $(date)]: Ralph is closing issue #$ISSUE_ID"
-  $RALPH_DIR/scripts/close_gh_issue $ISSUE_ID
+  RESULT=$($RALPH_DIR/scripts/close_gh_issue $ISSUE_ID 2>&1)
+  $RALPH_DIR/scripts/box-text "$RESULT"
 
   echo ""
   echo "## [Iteration:$i/$ITERATIONS, $(date)]: Ralph is updating docs from changes in issue #$ISSUE_ID"
@@ -103,7 +105,8 @@ for ((i=1; i<=ITERATIONS; i++)); do
 
   echo ""
   echo "## [Iteration:$i/$ITERATIONS, $(date)]: Ralph is pushing changes to github for issue #$ISSUE_ID"
-  git push
+  RESULT=$(git push 2>&1)
+  $RALPH_DIR/scripts/box-text "$RESULT"
 
   ITERATIONS_RUN=$i
 done
