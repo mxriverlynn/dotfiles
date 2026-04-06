@@ -37,7 +37,7 @@ for ((i=1; i<=ITERATIONS; i++)); do
   echo ""
   echo "## [Iteration:$i/$ITERATIONS, $(date)]: Ralph is looking for the next issue to work"
   ISSUE_ID=$($RALPH_DIR/scripts/get_next_issue $USERNAME)
-  $(./scripts/box-text "Issue #$ISSUE_ID")
+  $($RALPH_DIR/scripts/box-text "Issue #$ISSUE_ID")
 
   if [[ ! -n "$ISSUE_ID" ]]; then
     echo "## [Iteration:$i/$ITERATIONS, $(date)]: Ralph found nothing to work. Exiting loop."
@@ -47,7 +47,7 @@ for ((i=1; i<=ITERATIONS; i++)); do
   echo ""
   echo "## [Iteration:$i/$ITERATIONS, $(date)]: Ralph is finding the current git commit sha"
   STARTING_SHA=$($RALPH_DIR/scripts/get_commit_sha)
-  $(./scripts/box-text " - Starting git SHA for this iteration: $STARTING_SHA")
+  $($RALPH_DIR/scripts/box-text " - Starting git SHA for this iteration: $STARTING_SHA")
 
   echo ""
   echo "## [Iteration:$i/$ITERATIONS, $(date)]: Ralph is working issue #$ISSUE_ID"
@@ -55,7 +55,7 @@ for ((i=1; i<=ITERATIONS; i++)); do
   PROMPT+="STARTINGSHA=$STARTING_SHA\n"
   PROMPT+=$(cat $FEATURE_PROMPT_FILE)
   RESULT=$(claude --permission-mode acceptEdits --model sonnet -p "$PROMPT")
-  $(./scripts/box-text "$RESULT")
+  $($RALPH_DIR/scripts/box-text "$RESULT")
   
   echo ""
   echo "## [Iteration:$i/$ITERATIONS, $(date)]: Ralph is planning tests for issue #$ISSUE_ID"
@@ -63,7 +63,7 @@ for ((i=1; i<=ITERATIONS; i++)); do
   PROMPT+="STARTINGSHA=$STARTING_SHA\n"
   PROMPT+=$(cat $TEST_PLAN_PROMPT_FILE)
   RESULT=$(claude --permission-mode acceptEdits --model opus -p "$PROMPT")
-  $(./scripts/box-text "$RESULT")
+  $($RALPH_DIR/scripts/box-text "$RESULT")
 
   echo ""
   echo "## [Iteration:$i/$ITERATIONS, $(date)]: Ralph is writing tests for issue #$ISSUE_ID"
@@ -71,7 +71,7 @@ for ((i=1; i<=ITERATIONS; i++)); do
   PROMPT+="STARTINGSHA=$STARTING_SHA\n"
   PROMPT+=$(cat $TEST_WRITING_PROMPT_FILE)
   RESULT=$(claude --permission-mode acceptEdits --model sonnet -p "$PROMPT")
-  $(./scripts/box-text "$RESULT")
+  $($RALPH_DIR/scripts/box-text "$RESULT")
 
   echo ""
   echo "## [Iteration:$i/$ITERATIONS, $(date)]: Ralph is running a code review for issue #$ISSUE_ID"
@@ -79,7 +79,7 @@ for ((i=1; i<=ITERATIONS; i++)); do
   PROMPT+="STARTINGSHA=$STARTING_SHA\n"
   PROMPT+=$(cat $CODE_REVIEW_PLAN_PROMPT_FILE)
   RESULT=$(claude --permission-mode acceptEdits --model opus -p "$PROMPT")
-  $(./scripts/box-text "$RESULT")
+  $($RALPH_DIR/scripts/box-text "$RESULT")
 
   echo ""
   echo "## [Iteration:$i/$ITERATIONS, $(date)]: Ralph is fixing the code review items for issue #$ISSUE_ID"
@@ -87,7 +87,7 @@ for ((i=1; i<=ITERATIONS; i++)); do
   PROMPT+="STARTINGSHA=$STARTING_SHA\n"
   PROMPT+=$(cat $CODE_REVIEW_FIXES_PROMPT_FILE)
   RESULT=$(claude --permission-mode acceptEdits --model sonnet -p "$PROMPT")
-  $(./scripts/box-text "$RESULT")
+  $($RALPH_DIR/scripts/box-text "$RESULT")
 
   echo ""
   echo "## [Iteration:$i/$ITERATIONS, $(date)]: Ralph is closing issue #$ISSUE_ID"
@@ -99,7 +99,7 @@ for ((i=1; i<=ITERATIONS; i++)); do
   PROMPT+="STARTINGSHA=$STARTING_SHA\n"
   PROMPT+=$(cat $DOCS_UPDATE_PROMPT_FILE)
   RESULT=$(claude --permission-mode acceptEdits --model sonnet -p "$PROMPT")
-  $(./scripts/box-text "$RESULT")
+  $($RALPH_DIR/scripts/box-text "$RESULT")
 
   echo ""
   echo "## [Iteration:$i/$ITERATIONS, $(date)]: Ralph is pushing changes to github for issue #$ISSUE_ID"
@@ -112,13 +112,13 @@ echo ""
 echo "## [Finalizing:1/2, $(date)]: Ralph is looking for deffered work and creating issue tickets for them"
 PROMPT=$(cat $DEFERRED_WORK_PROMPT_FILE)
 RESULT=$(claude --permission-mode acceptEdits --model sonnet -p "$PROMPT")
-$(./scripts/box-text "$RESULT")
+$($RALPH_DIR/scripts/box-text "$RESULT")
 
 echo ""
 echo "## [Finalizing:2/2, $(date)]: Ralph is looking for lessons learned and documenting them"
 PROMPT=$(cat $LESSONS_LEARNED_PROMPT_FILE)
 RESULT=$(claude --permission-mode acceptEdits --model sonnet -p "$PROMPT")
-$(./scripts/box-text "$RESULT")
+$($RALPH_DIR/scripts/box-text "$RESULT")
 
 echo ""
 echo "[Completed, $(date)]: Ralph completed after $ITERATIONS_RUN iterations."
