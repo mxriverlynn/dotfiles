@@ -1,8 +1,8 @@
 @progress.txt
-1. run a /code-review for the changes made since commit sha STARTINGSHA, and write the full review content to code-review.md
+1. Run /test-planning against commits starting with STARTINGSHA, and write the test plan to test-plan.md
 2. Append your progress to progress.txt
 3. Append all deferred work to deferred.txt
 4. Update the github issue ISSUENUMBER with what was done.
-Never commit code-review.md
+Never commit test-plan.md
 Never commit progress.txt
-Never commit deffered.txt
+Never commit deferred.txt
