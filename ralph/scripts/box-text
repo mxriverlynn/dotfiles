@@ -19,7 +19,7 @@ VERT="│"
 HORZ="─"
 
 # Get terminal width, default to 80
-TERM_WIDTH=${COLUMNS:-$(tput cols 2>/dev/null || echo 80)}
+TERM_WIDTH=${COLUMNS:-$(tput cols 2>/dev/null || echo 120)}
 
 # Box overhead: │ + space + content + space + │ = 4 chars
 MAX_WIDTH=$(( TERM_WIDTH - 4 ))
