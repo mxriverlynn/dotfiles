@@ -112,18 +112,23 @@ for ((i=1; i<=ITERATIONS; i++)); do
 done
 
 echo ""
-echo "## [Finalizing:1/2, $(date)]: Ralph is looking for deffered work and creating issue tickets for them"
+echo "## [Finalizing:1/3, $(date)]: Ralph is looking for deffered work and creating issue tickets for them"
 PROMPT=$(cat $DEFERRED_WORK_PROMPT_FILE)
 RESULT=$(claude --permission-mode acceptEdits --model sonnet -p "$PROMPT")
 $RALPH_DIR/scripts/box-text "$RESULT"
 
 echo ""
-echo "## [Finalizing:2/2, $(date)]: Ralph is looking for lessons learned and documenting them"
+echo "## [Finalizing:2/3, $(date)]: Ralph is looking for lessons learned and documenting them"
 PROMPT=$(cat $LESSONS_LEARNED_PROMPT_FILE)
 RESULT=$(claude --permission-mode acceptEdits --model sonnet -p "$PROMPT")
 $RALPH_DIR/scripts/box-text "$RESULT"
 
 echo ""
-echo "[Completed, $(date)]: Ralph completed after $ITERATIONS_RUN iterations."
+echo "## [Finalizing:3/3, $(date)]: Ralph is doing a final push to github for issue #$ISSUE_ID"
+RESULT=$(git push 2>&1)
+$RALPH_DIR/scripts/box-text "$RESULT"
+
+echo ""
+echo "[Completed, $(date)]: Ralph completed after $ITERATIONS_RUN iteration(s) and 3 finalizing tasks."
 
 exit 0
