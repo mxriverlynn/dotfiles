@@ -353,6 +353,204 @@ ralph/
 
 ---
 
+## Acceptance Criteria & Test Plans
+
+### Steps loading (`steps.go`)
+
+**Acceptance criteria:**
+- Loads and parses `ralph-steps.json` from the directory containing the executable
+- Returns an error if the file is missing or contains invalid JSON
+- Each step has a `Name`; claude steps have `Model` and `PromptFile`; non-claude steps have `Command`
+- Resolves symlinked executable paths before determining the directory
+- Loads finalization steps from `ralph-finalize-steps.json` (or hardcoded list)
+
+**Unit tests:**
+- Parse valid JSON into `[]Step` and verify all fields are populated correctly
+- Parse JSON with missing optional fields (`model`, `command`) — verify zero values, no error
+- Return a descriptive error for malformed JSON
+- Return a descriptive error when file does not exist
+- Verify step count and ordering matches the JSON array order
+
+### Prompt building (`steps.go`)
+
+**Acceptance criteria:**
+- Reads the prompt file from `ralphDir/prompts/<promptFile>`
+- When `prependVars` is true, prepends `ISSUENUMBER=<id>\nSTARTINGSHA=<sha>\n` before prompt content
+- When `prependVars` is false, returns prompt content as-is
+- Returns an error if the prompt file cannot be read
+
+**Unit tests:**
+- Build a prompt with `prependVars: true` — verify the output starts with the two variable lines followed by file content
+- Build a prompt with `prependVars: false` — verify output equals raw file content exactly
+- Return error when prompt file path does not exist
+- Verify real newlines are used (not literal `\n` characters)
+
+### Command template variables (`workflow.go`)
+
+**Acceptance criteria:**
+- `{{ISSUE_ID}}` in non-claude step commands is replaced with the current issue number
+- Script paths are resolved relative to `ralphDir`, not cwd or executable dir
+- If `{{ISSUE_ID}}` is absent from a command, the command is passed through unchanged
+
+**Unit tests:**
+- Replace `{{ISSUE_ID}}` in `["scripts/close_gh_issue", "{{ISSUE_ID}}"]` with `"42"` — verify result is `["scripts/close_gh_issue", "42"]`
+- Command with no template variables passes through unchanged
+- Multiple occurrences of `{{ISSUE_ID}}` in a single command array are all replaced
+- Script path `scripts/close_gh_issue` is resolved to `<ralphDir>/scripts/close_gh_issue`
+
+### Log file writer (`logger.go`)
+
+**Acceptance criteria:**
+- Creates `ralph/logs/ralph-YYYY-MM-DD-HHMMSS.log` at startup, creating the `logs/` directory if needed
+- Each line is prefixed with `[timestamp] [iteration context] [step name]`
+- Writer is safe for concurrent use (two goroutines writing stdout/stderr simultaneously)
+- Log file is flushed and closed on shutdown
+
+**Unit tests:**
+- Write lines from a single goroutine — verify each line has timestamp and step prefix
+- Write lines from two goroutines concurrently — verify no interleaved/corrupted lines
+- Step name changes between writes — verify the prefix updates accordingly
+- Log file is created in the expected directory with the expected filename pattern
+- `logs/` directory is created if it doesn't exist
+
+### Subprocess streaming (`workflow.go`)
+
+**Acceptance criteria:**
+- stdout and stderr from subprocesses are both forwarded to the shared `io.PipeWriter`
+- Lines appear in the TUI log in real-time as the subprocess produces them
+- Both pipes are fully drained before `cmd.Wait()` is called
+- Scanner buffer is large enough (256KB) for long lines
+- Each line is also written to the file logger
+
+**Unit tests:**
+- Run a subprocess that writes to stdout — verify all lines arrive through the pipe reader
+- Run a subprocess that writes to stderr — verify stderr lines also arrive through the pipe reader
+- Run a subprocess that writes to both stdout and stderr — verify all lines arrive (order may interleave)
+- Verify `cmd.Wait()` is not called until both scanner goroutines finish (use `WaitGroup` correctly)
+
+**Integration tests:**
+- Run a real subprocess (e.g., `echo` or a small test script) end-to-end through the streaming pipeline and verify output appears in both the pipe and the log file
+
+### Subprocess termination (`workflow.go`)
+
+**Acceptance criteria:**
+- Calling `cancel()` on the step context terminates the running subprocess
+- Scanner goroutines exit after pipes close
+- `wg.Wait()` and `cmd.Wait()` return after termination, allowing the orchestration goroutine to proceed
+- No zombie processes are left behind
+
+**Unit tests:**
+- Start a long-running subprocess, cancel context, verify `cmd.Wait()` returns within a reasonable timeout
+- After cancellation, verify the pipe reader receives EOF (scanner goroutines exit)
+
+**Integration tests:**
+- Start a subprocess via the full streaming pipeline, cancel it mid-stream, verify the orchestration can proceed to the next step
+
+### Orchestration workflow (`workflow.go`)
+
+**Acceptance criteria:**
+- Runs N iterations as specified by the CLI argument
+- Each iteration: fetches next issue, gets current SHA, runs all steps sequentially
+- If `get_next_issue` returns empty, the iteration is skipped and the loop exits early
+- After all iterations, runs the finalization phase (deferred work, lessons learned, final push)
+- Displays startup banner from `ralph-art.txt`
+- Displays completion summary after all work finishes
+- All subprocesses run with `cmd.Dir` set to the user's cwd (not ralph dir)
+
+**Unit tests (with stubbed subprocess execution):**
+- Run 1 iteration with all steps succeeding — verify each step is called in order
+- Run 2 iterations — verify the loop executes twice with correct issue/SHA per iteration
+- `get_next_issue` returns empty — verify the loop exits early with a skip message
+- Verify `cmd.Dir` is set to the captured working directory for every subprocess
+- Verify finalization steps run after iteration loop completes
+- Verify startup banner content is written to the log pipe
+
+**Integration tests:**
+- Run the orchestration with a mock `gh` / `claude` that exits immediately, verify the full flow from start to completion summary
+
+### UI: Status header (`ui.go`)
+
+**Acceptance criteria:**
+- Displays current iteration number and total (e.g., `Iteration 1/3`)
+- Displays the issue being worked (e.g., `Issue #42: Add widget support`)
+- Shows 8 step checkboxes across two rows
+- Step indicators: `[✓]` done, `[▸ ...]` active with spinner, `[ ]` pending
+- During finalization, shows `Finalizing 1/3` and finalization step names instead
+
+**Unit tests:**
+- Set iteration to 2/5 — verify the iteration line string is formatted correctly
+- Mark steps 1-3 as done, step 4 as active, rest pending — verify checkbox states
+- Switch to finalization mode — verify header shows `Finalizing` and finalization step names
+- All 8 steps fit across two rows of 4
+
+### UI: Output log (`ui.go`)
+
+**Acceptance criteria:**
+- `Log` component receives the read end of the `io.Pipe`
+- Auto-scrolls to bottom as new lines arrive
+- User can scroll up; auto-scroll pauses when scrolled up
+- Scrolling back to bottom re-enables auto-scroll
+- Step transitions insert a visual separator line
+- All steps' output accumulates in one continuous log
+
+**Unit tests:**
+- Verify the separator line format matches `── <step name> ─────────────`
+- Verify retry separator includes `(retry)` suffix
+
+### UI: Error state (`ui.go`)
+
+**Acceptance criteria:**
+- When a step fails (non-zero exit), the step checkbox shows `[✗]`
+- Shortcut bar changes to `c continue  r retry  q quit`
+- `c` skips the failed step and continues to the next
+- `r` retries the failed step from scratch (output from failed attempt remains in log)
+- `q` triggers quit confirmation
+
+**Unit tests:**
+- Trigger error state — verify checkbox text changes to `[✗]`
+- Trigger error state — verify shortcut bar text updates
+- Press `c` in error state — verify the workflow advances to the next step
+- Press `r` in error state — verify the step is re-executed and separator includes `(retry)`
+
+### UI: Quit confirmation (`ui.go`)
+
+**Acceptance criteria:**
+- Pressing `q` at any time shows `Quit ralph? (y/n)` in the shortcut bar area
+- `y` terminates the current subprocess and exits the TUI
+- `n` dismisses the confirmation and returns to normal operation
+- Any other key is ignored while confirmation is shown
+
+**Unit tests:**
+- Press `q` — verify confirmation prompt is displayed
+- Press `q` then `n` — verify normal shortcut bar is restored
+- Press `q` then `y` — verify quit is triggered
+- Press `q` then any other key — verify confirmation remains shown
+
+### UI: Keyboard shortcuts (`ui.go`)
+
+**Acceptance criteria:**
+- `↑`/`k` scrolls log up, `↓`/`j` scrolls log down (handled by Glyph's `BindVimNav`)
+- `n` skips the current step (terminates subprocess, advances to next)
+- `q` triggers quit confirmation
+- In error state: `c` continues, `r` retries
+
+**Unit tests:**
+- Press `n` during a running step — verify subprocess cancellation is triggered and workflow advances
+- Verify keyboard handler dispatches correctly based on current state (normal vs error vs quit-confirm)
+
+### Signal handling (`workflow.go` / `main.go`)
+
+**Acceptance criteria:**
+- SIGINT and SIGTERM cancel the current subprocess context
+- Scanner goroutines drain before exit
+- Log file is flushed and closed
+- Terminal state is restored
+
+**Integration tests:**
+- Send SIGINT to the process during a running step — verify clean shutdown (no panic, log file closed, terminal restored)
+
+---
+
 ## Verification
 
 1. `cd ralph/ralph-tui && go build` — compiles
