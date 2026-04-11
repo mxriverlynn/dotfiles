@@ -1,2 +1,9 @@
 /private
 vim/tmp
+
+# Ralph files
+ralph-tui
+progress.txt
+deferred.txt
+test-plan.md
+code-review.md

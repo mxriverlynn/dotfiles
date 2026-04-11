@@ -1,6 +1,12 @@
 #!/bin/bash
 set -f
 
+# Check if input is provided
+if [ -z "$1" ]; then
+    echo "Usage: $0 \"text to box\""
+    exit 1
+fi
+
 # Store input
 TEXT="$1"
 
