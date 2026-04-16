@@ -1,6 +1,7 @@
 {
+  "env": ["GH_TOKEN"],
   "initialize": [
-    { "name": "Splash",          "isClaude": false, "command": ["cat", "{{PROJECT_DIR}}/ralph-art.txt"] },
+    { "name": "Splash",          "isClaude": false, "command": ["cat", "{{WORKFLOW_DIR}}/ralph-art.txt"] },
     { "name": "Get GitHub user", "isClaude": false, "command": ["scripts/get_gh_user"], "captureAs": "GITHUB_USER" }
   ],
   "iteration": [
@@ -10,14 +11,14 @@
     { "name": "Test planning",    "isClaude": true,  "model": "opus",   "promptFile": "test-planning.md" },
     { "name": "Test writing",     "isClaude": true,  "model": "sonnet", "promptFile": "test-writing.md" },
     { "name": "Code review",      "isClaude": true,  "model": "opus",   "promptFile": "code-review-changes.md" },
-    { "name": "Fix Review items", "isClaude": true,  "model": "sonnet", "promptFile": "code-review-fixes.md" },
+    { "name": "Fix review items", "isClaude": true,  "model": "sonnet", "promptFile": "code-review-fixes.md" },
     { "name": "Close issue",      "isClaude": false, "command": ["scripts/close_gh_issue", "{{ISSUE_ID}}"] },
     { "name": "Update docs",      "isClaude": true,  "model": "sonnet", "promptFile": "update-docs.md" },
     { "name": "Git push",         "isClaude": false, "command": ["git", "push"] }
   ],
   "finalize": [
-    { "name": "Deferred work",   "isClaude": true, "model": "sonnet", "promptFile": "deferred-work.md" },
-    { "name": "Lessons learned", "isClaude": true, "model": "sonnet", "promptFile": "lessons-learned.md" },
+    { "name": "Deferred work",   "isClaude": true,  "model": "sonnet", "promptFile": "deferred-work.md" },
+    { "name": "Lessons learned", "isClaude": true,  "model": "sonnet", "promptFile": "lessons-learned.md" },
     { "name": "Final git push",  "isClaude": false, "command": ["git", "push"] }
   ]
 }
