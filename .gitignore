@@ -3,6 +3,7 @@ vim/tmp
 
 # Ralph files
 ralph-tui
+ralph/pr9k
 progress.txt
 deferred.txt
 test-plan.md
