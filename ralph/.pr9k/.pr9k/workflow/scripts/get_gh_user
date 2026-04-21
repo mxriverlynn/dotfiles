@@ -1,6 +1,0 @@
-#!/bin/bash
-set -e
-
-username=$(gh api user -q ".login")
-
-echo $username
