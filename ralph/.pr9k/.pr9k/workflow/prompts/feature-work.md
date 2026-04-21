@@ -1,0 +1,16 @@
+@progress.txt
+You will likely need TodoWrite for tracking multi-step progress on this task. Preload once via ToolSearch query "select:TodoWrite".
+# Context
+Issue #{{ISSUE_ID}}: {{ISSUE_BODY}}
+Project card:
+{{PROJECT_CARD}}
+
+1. Implement github issue #{{ISSUE_ID}} in the current branch (do not switch to a different branch)
+2. Add a comment to github issue {{ISSUE_ID}} with your progress
+3. Append your progress to progress.txt.
+4. Append all deferred work to deferred.txt
+5. Commit changes in a single commit.
+ONLY WORK ON A SINGLE TASK.
+Check each Acceptance Criteria in github issue #{{ISSUE_ID}}, as each criteria is completed.
+Never commit progress.txt
+Never commit deferred.txt
