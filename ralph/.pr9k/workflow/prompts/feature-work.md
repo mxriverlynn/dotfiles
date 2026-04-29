@@ -8,6 +8,14 @@ Project card:
 
 Implement github issue #{{ISSUE_ID}} in the current branch (do not switch branches) using strict TDD self-healing. ONLY WORK ON A SINGLE TASK.
 
+## UI Design References
+
+If there are no image attachments on github issue #{{ISSUE_ID}}, skip to the TDD self-healing loop.
+
+Download all images attached to the github issue
+- Save images to .pr9k/artifacts/ui-designs/
+- Use appropriate images as visual reference for UI development
+
 ## TDD self-healing loop
 
 1. Write acceptance tests derived from the issue's acceptance criteria. Run the test suite and confirm the new tests FAIL for the right reason. If a new test passes before any production code is written, rewrite it so it actually exercises the new behavior.
@@ -31,6 +39,4 @@ Implement github issue #{{ISSUE_ID}} in the current branch (do not switch branch
 8. Append all deferred work to .pr9k/artifacts/deferred.txt.
 9. Commit changes in a single commit.
 
-Never commit .pr9k/artifacts/progress.txt
-Never commit .pr9k/artifacts/deferred.txt
-Never commit .pr9k/artifacts/tdd-log.txt
+Never commit any file in .pr9k/artifacts/

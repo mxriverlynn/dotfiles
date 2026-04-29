@@ -16,7 +16,4 @@ Project card:
 4. Append your progress to .pr9k/artifacts/progress.txt
 5. Append all deferred work to .pr9k/artifacts/deferred.txt
 
-# Constraints
-Never commit .pr9k/artifacts/test-plan.md
-Never commit .pr9k/artifacts/progress.txt
-Never commit .pr9k/artifacts/deferred.txt
+Never commit any file in .pr9k/artifacts/

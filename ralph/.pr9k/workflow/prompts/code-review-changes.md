@@ -7,6 +7,4 @@ You will likely need TodoWrite for tracking multi-step progress on this task. Pr
 2. Append your progress to .pr9k/artifacts/progress.txt
 3. Append all deferred work to .pr9k/artifacts/deferred.txt
 
-Never commit .pr9k/artifacts/code-review.md
-Never commit .pr9k/artifacts/progress.txt
-Never commit .pr9k/artifacts/deffered.txt
+Never commit any file in .pr9k/artifacts/

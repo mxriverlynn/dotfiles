@@ -16,8 +16,6 @@ If the .pr9k/artifacts/test-plan.md file is empty, non-existent, or otherwise sa
 6. Append your progress to .pr9k/artifacts/progress.txt
 7. Append all deferred work to .pr9k/artifacts/deferred.txt
 
-Never commit .pr9k/artifacts/test-plan.md
-Never commit .pr9k/artifacts/progress.txt
-Never commit .pr9k/artifacts/deferred.txt
-
 Budget: write all tests first, then run the suite ONCE. If >5 tests fail, fix them in batch rather than one at a time. Do not exceed 8 minutes of wall-clock test execution.
+
+Never commit any file in .pr9k/artifacts/

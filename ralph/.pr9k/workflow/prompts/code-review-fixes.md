@@ -9,6 +9,4 @@ If the .pr9k/artifacts/code-review.md file is empty, non-existant, or otherwise 
 5. Append your progress to .pr9k/artifacts/progress.txt
 6. Append all deferred work to .pr9k/artifacts/deferred.txt
 
-Never commit .pr9k/artifacts/code-review.md
-Never commit .pr9k/artifacts/progress.txt
-Never commit .pr9k/artifacts/deffered.txt
+Never commit any file in .pr9k/artifacts/

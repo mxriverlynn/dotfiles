@@ -6,4 +6,4 @@ You will likely need TodoWrite for tracking multi-step progress on this task. Pr
 3. Create a new issue with a `deferred` label and the full context of everything that was deferred, where, and why
 4. Delete .pr9k/artifacts/deferred.txt
 
-Never commit .pr9k/artifacts/deferred.txt
+Never commit any file in .pr9k/artifacts/
