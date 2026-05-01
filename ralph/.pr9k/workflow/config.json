@@ -27,7 +27,7 @@
     { "name": "Test writing",          "isClaude": true,  "model": "sonnet", "promptFile": "test-writing.md", "timeoutSeconds": 1800, "onTimeout": "continue" },
     { "name": "Summarize to issue",    "isClaude": false, "command": ["scripts/post_issue_summary", "{{ISSUE_ID}}"] },
     { "name": "Close issue",           "isClaude": false, "command": ["scripts/close_gh_issue", "{{ISSUE_ID}}"] },
-    { "name": "Git push",              "isClaude": false, "command": ["git", "push"] },
+    { "name": "Git push",              "isClaude": false, "command": ["scripts/git_push"] },
     { "name": "Delete artifacts",       "isClaude": false, "command": ["rm", "-rdf", ".pr9k/artifacts/*"] }
   ],
   "finalize": [
